@@ -1,0 +1,26 @@
+# Environment & Secrets
+.env
+.env.local
+
+# Bytecode & Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Streamlit User Credentials
+.streamlit/credentials.toml
+
+# User Data & ChromaDB persistent caches
+data/*
+!data/.gitkeep
+
+# Virtual Environments
+venv/
+env/
+.venv/
+
+# OS specific files
+.DS_Store
+Thumbs.db
