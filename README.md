@@ -1,5 +1,4 @@
 # 🎓 CourseCompass AI — College Study Assistant MVP
-
 CourseCompass AI is an AI-powered study assistant for college students. Students upload course materials (lecture slides, textbook chapters, study notes) and ask questions. The app uses Retrieval-Augmented Generation (RAG) with verifiable page citations, exam-style answer blueprinting (2-mark, 5-mark, 10-mark), and interactive quizzes.
 
 ---
