@@ -286,8 +286,9 @@ Generate exactly {num_questions} completely UNIQUE and diverse Multiple Choice Q
 Requirements:
 1. Cover different topics (e.g. translation mechanics, formula calculations, algorithm trade-offs, edge cases).
 2. Exactly 4 distinct options per question: A, B, C, D.
-3. Provide a clear explanation citing the document name and page number.
-4. Output MUST be ONLY a valid JSON array without any markdown formatting or commentary.
+3. CRITICAL: Distribute the correct answers evenly across A, B, C, and D (do NOT make all correct answers B or any single letter).
+4. Provide a clear explanation citing the document name and page number.
+5. Output MUST be ONLY a valid JSON array without any markdown formatting or commentary.
 
 JSON Schema:
 [
@@ -305,7 +306,7 @@ JSON Schema:
             if raw_resp:
                 parsed = cls._parse_quiz_json(raw_resp)
                 if parsed and len(parsed) >= 2:
-                    return parsed[:num_questions]
+                    return [cls._shuffle_question_options(q) for q in parsed[:num_questions]]
 
         # 2. Rich 15+ Varied Question Bank with Shuffling Fallback
         extended_bank = [
@@ -313,12 +314,12 @@ JSON Schema:
                 "id": "q_belady",
                 "question": "Which page replacement algorithm is susceptible to Belady's Anomaly (where increasing memory frames can increase page faults)?",
                 "options": [
-                    "A) LRU (Least Recently Used)",
-                    "B) FIFO (First-In, First-Out)",
+                    "A) FIFO (First-In, First-Out)",
+                    "B) LRU (Least Recently Used)",
                     "C) Optimal Page Replacement (OPT)",
                     "D) Working-Set Strategy"
                 ],
-                "correct_option": "B",
+                "correct_option": "A",
                 "explanation": "FIFO replaces the oldest page regardless of recent usage and is susceptible to Belady's Anomaly. LRU and OPT belong to the class of stack algorithms and do not suffer from it.",
                 "source": f"{doc_name} (Page 3)"
             },
@@ -327,11 +328,11 @@ JSON Schema:
                 "question": "What is the primary architectural function of the Translation Lookaside Buffer (TLB)?",
                 "options": [
                     "A) To store swapped-out pages on secondary storage disk",
-                    "B) A fast hardware associative cache that speeds up virtual-to-physical address translation",
-                    "C) To schedule CPU processes in round-robin order",
+                    "B) To schedule CPU processes in round-robin order",
+                    "C) A fast hardware associative cache that speeds up virtual-to-physical address translation",
                     "D) To encrypt main memory frames against bus snooping"
                 ],
-                "correct_option": "B",
+                "correct_option": "C",
                 "explanation": "Because page tables reside in RAM, memory references require multiple memory accesses without a TLB. The TLB caches recent translations for single-cycle lookup.",
                 "source": f"{doc_name} (Page 2)"
             },
@@ -340,11 +341,11 @@ JSON Schema:
                 "question": "What is the direct root cause of 'Thrashing' in an operating system?",
                 "options": [
                     "A) A memory leak in user software applications",
-                    "B) High degree of multiprogramming causing allocated frames to fall below working-set requirements",
-                    "C) A hardware clock failure in the Memory Management Unit (MMU)",
-                    "D) Using 64-bit address spaces instead of 32-bit"
+                    "B) A hardware clock failure in the Memory Management Unit (MMU)",
+                    "C) Using 64-bit address spaces instead of 32-bit",
+                    "D) High degree of multiprogramming causing allocated frames to fall below working-set requirements"
                 ],
-                "correct_option": "B",
+                "correct_option": "D",
                 "explanation": "Thrashing occurs when the OS admits too many processes, diluting frame allocation below working sets. Cascading page faults stall processes on swap I/O.",
                 "source": f"{doc_name} (Page 4)"
             },
@@ -365,12 +366,12 @@ JSON Schema:
                 "id": "q_logical_addr",
                 "question": "In a standard paging scheme, how is a logical (virtual) memory address partitioned?",
                 "options": [
-                    "A) Segment ID and Privilege Level only",
-                    "B) Page Number (p) and Page Offset (d)",
+                    "A) Page Number (p) and Page Offset (d)",
+                    "B) Segment ID and Privilege Level only",
                     "C) Frame Number (f) and Process Priority",
                     "D) Cache Tag and TLB Index"
                 ],
-                "correct_option": "B",
+                "correct_option": "A",
                 "explanation": "The CPU generates a logical address divided into two components: the Page Number (p) used as an index into the page table, and the Page Offset (d) within the page.",
                 "source": f"{doc_name} (Page 1)"
             },
@@ -379,11 +380,11 @@ JSON Schema:
                 "question": "The Working-Set model for preventing thrashing is fundamentally based on which principle?",
                 "options": [
                     "A) Amdahl's Law of parallel computing",
-                    "B) Locality of Reference (Temporal and Spatial locality)",
-                    "C) Round-Robin CPU fairness",
+                    "B) Round-Robin CPU fairness",
+                    "C) Locality of Reference (Temporal and Spatial locality)",
                     "D) Little's Law in queuing theory"
                 ],
-                "correct_option": "B",
+                "correct_option": "C",
                 "explanation": "The working-set model relies on locality of reference: processes reference a clustered subset of pages during any execution window delta.",
                 "source": f"{doc_name} (Page 4)"
             },
@@ -405,11 +406,11 @@ JSON Schema:
                 "question": "Which data structure is commonly utilized to implement an exact Least Recently Used (LRU) stack algorithm?",
                 "options": [
                     "A) A fixed-size circular FIFO array",
-                    "B) A doubly linked list / stack where referenced pages are moved to the top",
-                    "C) A binary search tree indexed by page size",
-                    "D) A single boolean flag per process"
+                    "B) A binary search tree indexed by page size",
+                    "C) A single boolean flag per process",
+                    "D) A doubly linked list / stack where referenced pages are moved to the top"
                 ],
-                "correct_option": "B",
+                "correct_option": "D",
                 "explanation": "LRU can be implemented using a doubly linked stack: whenever a page is referenced, it is removed from its position and placed at the top; the bottom page is the LRU victim.",
                 "source": f"{doc_name} (Page 3)"
             },
@@ -417,12 +418,12 @@ JSON Schema:
                 "id": "q_emat_tlb",
                 "question": "If TLB access time is 10 ns, RAM access time is 100 ns, and the TLB hit ratio is 90%, what is the Effective Memory Access Time (EMAT)?",
                 "options": [
-                    "A) 110 ns",
-                    "B) 119 ns",
-                    "C) 210 ns",
+                    "A) 119 ns (approx 120 ns)",
+                    "B) 210 ns",
+                    "C) 110 ns",
                     "D) 50 ns"
                 ],
-                "correct_option": "B",
+                "correct_option": "A",
                 "explanation": "EMAT = (0.90 * (10 + 100)) + (0.10 * (10 + 100 + 100)) = (0.90 * 110) + (0.10 * 210) = 99 + 21 = 120 ns (approx 119-120 ns).",
                 "source": f"{doc_name} (Page 2)"
             },
@@ -431,11 +432,11 @@ JSON Schema:
                 "question": "What is the primary advantage of an Inverted Page Table over a traditional Linear Page Table?",
                 "options": [
                     "A) It eliminates the need for a TLB cache",
-                    "B) It significantly reduces memory consumption by tracking one entry per physical frame rather than each virtual page",
-                    "C) It completely avoids page faults",
+                    "B) It completely avoids page faults",
+                    "C) It significantly reduces memory consumption by tracking one entry per physical frame rather than each virtual page",
                     "D) It allows infinite processes to run without RAM"
                 ],
-                "correct_option": "B",
+                "correct_option": "C",
                 "explanation": "In 64-bit systems, linear page tables consume gigabytes. Inverted page tables have only one entry per physical memory frame, dramatically saving space.",
                 "source": f"{doc_name} (Page 2)"
             },
@@ -444,11 +445,11 @@ JSON Schema:
                 "question": "What happens during 'Demand Paging' when a process accesses a page marked as invalid in its page table?",
                 "options": [
                     "A) The process is killed immediately with a segmentation fault",
-                    "B) A Page Fault trap is triggered to the OS, which loads the page from disk into a free RAM frame",
-                    "C) The CPU halts instruction execution permanently",
-                    "D) The MMU switches to 16-bit real mode"
+                    "B) The CPU halts instruction execution permanently",
+                    "C) The MMU switches to 16-bit real mode",
+                    "D) A Page Fault trap is triggered to the OS, which loads the page from disk into a free RAM frame"
                 ],
-                "correct_option": "B",
+                "correct_option": "D",
                 "explanation": "An invalid bit signals that the page is currently on disk. The hardware generates a page-fault trap; the OS handles the I/O, updates the page table, and restarts the instruction.",
                 "source": f"{doc_name} (Page 1)"
             },
@@ -467,9 +468,55 @@ JSON Schema:
             }
         ]
 
-        # Shuffle and sample so every attempt is guaranteed to be different
+        # Shuffle questions and randomize their options across A, B, C, D
         random.shuffle(extended_bank)
-        return extended_bank[:num_questions]
+        selected = extended_bank[:num_questions]
+        return [cls._shuffle_question_options(q) for q in selected]
+
+    @classmethod
+    def _shuffle_question_options(cls, q: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Randomly shuffles the options of an MCQ and re-maps correct_option
+        evenly across A, B, C, and D so the correct answer is never predictably 'B'.
+        """
+        import random
+        import re
+
+        raw_options = q.get("options", [])
+        if not raw_options or len(raw_options) < 2:
+            return q
+
+        old_correct_letter = str(q.get("correct_option", "A")).strip().upper()
+        letter_to_idx = {"A": 0, "B": 1, "C": 2, "D": 3}
+        old_correct_idx = letter_to_idx.get(old_correct_letter, 0)
+
+        # Strip existing prefixes like "A) ", "A. ", "a) "
+        clean_texts = []
+        for opt in raw_options:
+            cleaned = re.sub(r"^[A-Da-d][\)\.\:\-]\s*", "", str(opt)).strip()
+            clean_texts.append(cleaned)
+
+        # Identify the correct answer's text
+        if old_correct_idx < len(clean_texts):
+            correct_text = clean_texts[old_correct_idx]
+        else:
+            correct_text = clean_texts[0]
+
+        # Randomly shuffle the option texts
+        random.shuffle(clean_texts)
+
+        # Find new index of the correct text
+        new_correct_idx = clean_texts.index(correct_text)
+        idx_to_letter = {0: "A", 1: "B", 2: "C", 3: "D"}
+        new_correct_letter = idx_to_letter.get(new_correct_idx, "A")
+
+        # Re-attach standard A), B), C), D) prefixes
+        shuffled_options = [f"{idx_to_letter[i]}) {text}" for i, text in enumerate(clean_texts)]
+
+        q_copy = dict(q)
+        q_copy["options"] = shuffled_options
+        q_copy["correct_option"] = new_correct_letter
+        return q_copy
 
     @classmethod
     def generate_prep_questions(
