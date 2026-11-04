@@ -6,33 +6,44 @@ CourseCompass AI is an AI-powered study assistant for college students. Students
 
 ## 🌟 Key Features
 
-1. **Academic Dashboard**
+1. **🔐 Multi-Method Student Authentication**
+   - **Student Sign In**: Secure login with salted SHA-256 password hashing.
+   - **New Account Registration**: Student profile creation with name, email, university, and major.
+   - **Google Single Sign-On (SSO)**: 1-click verified login with institutional Google Workspace or student Gmail.
+   - **⚡ 1-Click Demo Login**: Pre-seeded demo account (*Alex Student*, `student@college.edu`) for instant review.
+   - **Session Security & Sign Out**: Full session guard protecting course notes, with profile badges and one-click logout.
+
+2. **Academic Dashboard & Modern UI**
+   - Clean, zero-sidebar full-width modern SaaS layout.
    - Track enrolled courses, uploaded documents, total indexed knowledge chunks, and recent study activity.
    - One-click sample loader pre-bundled with an Operating Systems: Virtual Memory & Paging lecture note.
 
-2. **Document Management & PDF Processing**
+3. **Document Management & PDF Processing**
    - Upload multiple PDF files per course.
    - Text extraction powered by **PyMuPDF** (`pymupdf`), with fallback to `pypdf` and optional OCR fallback via `pytesseract`.
    - Exact page number tracking for verifiable citations.
    - Real-time indexing progress and document status indicators.
 
-3. **Grounded RAG Question Answering**
+4. **Grounded RAG Question Answering**
    - Hybrid Vector Retrieval combining **ChromaDB** dense vector embeddings with **BM25 keyword search** (Reciprocal Rank Fusion).
-   - Multi-provider LLM support: **Google Gemini** (Gemini 2.5 Flash / 1.5 Flash), **OpenAI** (GPT-4o-mini), or **Ollama** (Local models).
+   - Multi-provider LLM support: **Groq** (`openai/gpt-oss-120b`, `qwen/qwen3.8-27b`), **Google Gemini**, **OpenAI**, or **Academic Fallback Engine**.
    - **Zero-Hallucination Policy**: If course materials do not contain the answer, the assistant states so explicitly.
    - Verifiable source citation cards showing document name, page number, and source excerpts.
 
-4. **Academic Study Tools**
+5. **Academic Study Tools & Exam Blueprinting**
    - **Structured Revision Summaries**: Executive overview, core concepts, formulas, exam pitfalls, and revision checklists.
    - **Exam Answer Blueprint**: Generates answers tailored for university exam marking schemes:
      - **2 Marks**: Crisp definition and 2 bullet points (40–60 words).
      - **5 Marks**: Working principle, mechanism, and diagram description (150–250 words).
      - **10 Marks**: Comprehensive essay structure with intro, theory, architecture, trade-offs, case study, and conclusion (400–600 words).
-   - **Interactive Practice Quizzes**: Generates MCQs with immediate feedback, scoring, and page citations.
+   - **Interactive Practice Quizzes**:
+     - Dynamic active-recall multiple-choice questions.
+     - **Option Shuffling**: Correct answers are randomly balanced across A, B, C, and D.
+     - Comprehensive explanations and grounded page citations.
 
-5. **Chat History**
+6. **Chat History & Cloud Deployment**
    - Saves conversations per subject so students can continue past sessions.
-   - Clear chat and export options.
+   - Ready for Streamlit Cloud with `packages.txt` and `pysqlite3-binary`.
 
 ---
 
