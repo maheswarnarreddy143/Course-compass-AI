@@ -11,3 +11,4 @@ pillow>=10.0.0
 pytesseract>=0.3.10
 pandas>=2.0.0
 numpy>=1.26.0
+pysqlite3-binary; sys_platform == 'linux'

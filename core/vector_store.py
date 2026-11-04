@@ -12,12 +12,20 @@ import json
 
 from config import CHROMA_DIR, TOP_K_RETRIEVAL
 
+# ChromaDB sqlite3 fix for Streamlit Community Cloud (Linux)
+try:
+    __import__('pysqlite3')
+    import sys
+    sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+except Exception:
+    pass
+
 # ChromaDB
 try:
     import chromadb
     from chromadb.config import Settings
     HAS_CHROMA = True
-except ImportError:
+except Exception:
     HAS_CHROMA = False
 
 # BM25

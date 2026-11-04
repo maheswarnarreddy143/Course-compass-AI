@@ -10,6 +10,16 @@ from dotenv import load_dotenv
 # Load .env if present
 load_dotenv()
 
+# Support Streamlit Cloud Secrets (when deployed online)
+try:
+    import streamlit as st
+    if hasattr(st, "secrets"):
+        for k in ["GROQ_API_KEY", "GEMINI_API_KEY", "OPENAI_API_KEY"]:
+            if k in st.secrets and not os.getenv(k):
+                os.environ[k] = str(st.secrets[k])
+except Exception:
+    pass
+
 # Base Paths
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
