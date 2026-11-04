@@ -95,6 +95,42 @@ class TestCourseCompassCore(unittest.TestCase):
         sm.clear_chat_history(subject_id=new_course["id"])
         self.assertEqual(len(sm.get_chat_history(subject_id=new_course["id"])), 0)
 
+        # Test User Auth
+        ok, msg, user = sm.authenticate_user("student@college.edu", "student123")
+        self.assertTrue(ok)
+        self.assertEqual(user["email"], "student@college.edu")
+
+        # Wrong password
+        ok_fail, msg_fail, _ = sm.authenticate_user("student@college.edu", "wrongpw")
+        self.assertFalse(ok_fail)
+
+        # Register new student
+        ok_reg, _, new_student = sm.register_user(
+            name="Priya Sharma",
+            email="priya@mit.edu",
+            password="securepassword123",
+            university="MIT",
+            major="AI & Data Science"
+        )
+        self.assertTrue(ok_reg)
+        self.assertEqual(new_student["name"], "Priya Sharma")
+
+        # Duplicate email registration should fail
+        ok_dup, _, _ = sm.register_user(
+            name="Priya Duplicate",
+            email="priya@mit.edu",
+            password="securepassword123"
+        )
+        self.assertFalse(ok_dup)
+
+        # Google 1-Click Auth
+        g_user = sm.google_auth_user(
+            email="google.scholar@gmail.com",
+            name="Scholar Jordan"
+        )
+        self.assertEqual(g_user["auth_provider"], "google")
+        self.assertEqual(g_user["email"], "google.scholar@gmail.com")
+
         # Cleanup
         if test_storage_file.exists():
             test_storage_file.unlink()

@@ -278,11 +278,51 @@ st.markdown("""
         margin-bottom: 1.3rem;
         box-shadow: 0 2px 8px rgba(0,0,0,0.03);
     }
+
+    /* Auth & Login Hero Card */
+    .auth-hero-pane {
+        background: linear-gradient(145deg, #0F172A 0%, #1E293B 55%, #1D4ED8 100%);
+        border-radius: 20px;
+        padding: 2.2rem 2.4rem;
+        color: #FFFFFF;
+        height: 100%;
+        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.16);
+    }
+    .auth-feature-pill {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.85rem;
+        margin-bottom: 1.1rem;
+        background: rgba(255, 255, 255, 0.07);
+        padding: 0.85rem 1.1rem;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .google-btn-badge {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.8rem;
+        background: #FFFFFF;
+        border: 1px solid #CBD5E1;
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        font-weight: 600;
+        color: #1E293B;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        margin-bottom: 1.2rem;
+    }
 </style>
 """, unsafe_allow_html=True)
 
 
 # ---------------- SESSION STATE ----------------
+if "is_authenticated" not in st.session_state:
+    st.session_state.is_authenticated = False
+
+if "current_user" not in st.session_state:
+    st.session_state.current_user = None
+
 if "selected_subject_id" not in st.session_state:
     subjects = storage.get_subjects()
     st.session_state.selected_subject_id = subjects[0]["id"] if subjects else None
@@ -343,6 +383,157 @@ def load_sample_document(target_subject_id: str):
     st.toast("✅ Sample Lecture Notes successfully loaded and indexed!")
 
 
+# ---------------- AUTHENTICATION VIEW ----------------
+def render_auth_view():
+    st.markdown("""
+    <div style="text-align: center; margin-top: 0.8rem; margin-bottom: 2rem;">
+        <div style="display: inline-flex; align-items: center; justify-content: center; width: 58px; height: 58px; border-radius: 16px; background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%); color: white; font-size: 1.85rem; box-shadow: 0 8px 24px rgba(37, 99, 235, 0.32);">🧭</div>
+        <h1 style="font-size: 2.35rem; font-weight: 800; color: #0F172A; margin: 0.75rem 0 0.25rem 0; letter-spacing: -0.6px;">CourseCompass AI</h1>
+        <p style="color: #64748B; font-size: 1.05rem; max-width: 580px; margin: 0 auto; line-height: 1.5;">Your Intelligent Academic Study Assistant & Grounded RAG Copilot. Sign in or create a student account to access your courses, blueprints, and quizzes.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    auth_col1, auth_col2 = st.columns([1.1, 1.25], gap="large")
+
+    with auth_col1:
+        st.markdown("""
+        <div class="auth-hero-pane">
+            <span style="background: rgba(59, 130, 246, 0.3); color: #93C5FD; font-size: 0.76rem; font-weight: 700; text-transform: uppercase; padding: 0.3rem 0.8rem; border-radius: 9999px; letter-spacing: 0.5px; border: 1px solid rgba(147, 197, 253, 0.3);">Student Learning Platform</span>
+            <h2 style="color: #FFFFFF; font-size: 1.65rem; font-weight: 800; margin: 1rem 0 0.6rem 0; line-height: 1.25;">Smarter College Exam Prep Grounded in Your Notes</h2>
+            <p style="color: #CBD5E1; font-size: 0.92rem; line-height: 1.6; margin-bottom: 1.6rem;">Upload lecture slides, syllabus PDFs, and textbooks. Get hallucination-free answers with exact page citations, rubric-tailored exam blueprints, and dynamic quizzes.</p>
+            
+            <div class="auth-feature-pill">
+                <span style="font-size: 1.35rem;">📄</span>
+                <div>
+                    <div style="font-weight: 700; font-size: 0.92rem; color: #F8FAFC;">100% Grounded RAG with Page Citations</div>
+                    <div style="font-size: 0.82rem; color: #94A3B8; line-height: 1.4;">Every response cites exact pages from your notes for verifiable revision.</div>
+                </div>
+            </div>
+            
+            <div class="auth-feature-pill">
+                <span style="font-size: 1.35rem;">🎯</span>
+                <div>
+                    <div style="font-weight: 700; font-size: 0.92rem; color: #F8FAFC;">2, 5 & 10 Marks Exam Blueprinting</div>
+                    <div style="font-size: 0.82rem; color: #94A3B8; line-height: 1.4;">Structured exam answers formatted with headings, diagrams, and marking rubrics.</div>
+                </div>
+            </div>
+
+            <div class="auth-feature-pill">
+                <span style="font-size: 1.35rem;">🧠</span>
+                <div>
+                    <div style="font-weight: 700; font-size: 0.92rem; color: #F8FAFC;">Dynamic Quizzes with Balanced Options</div>
+                    <div style="font-size: 0.82rem; color: #94A3B8; line-height: 1.4;">Active-recall questions shuffled across A, B, C, D with full explanations.</div>
+                </div>
+            </div>
+
+            <div class="auth-feature-pill" style="margin-bottom: 0;">
+                <span style="font-size: 1.35rem;">⚡</span>
+                <div>
+                    <div style="font-weight: 700; font-size: 0.92rem; color: #F8FAFC;">Ultra-Fast Groq Inference</div>
+                    <div style="font-size: 0.82rem; color: #94A3B8; line-height: 1.4;">Sub-second AI reasoning via Groq with seamless offline fallback.</div>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with auth_col2:
+        auth_mode = st.tabs(["🔑 Sign In", "✨ Create Account", "🌐 Continue with Google"])
+
+        # Tab 1: Sign In
+        with auth_mode[0]:
+            st.markdown("<h3 style='margin-bottom: 0.2rem; font-weight: 700; color: #0F172A;'>Welcome Back</h3><p style='color: #64748B; font-size: 0.88rem; margin-bottom: 1.2rem;'>Sign in with your student credentials.</p>", unsafe_allow_html=True)
+            with st.form("signin_form"):
+                login_email = st.text_input("Academic or Personal Email", value="student@college.edu", placeholder="e.g. yourname@college.edu")
+                login_pass = st.text_input("Password", value="student123", type="password", placeholder="Enter your password")
+                submitted = st.form_submit_button("Sign In to CourseCompass", type="primary", use_container_width=True)
+                if submitted:
+                    ok, msg, user = storage.authenticate_user(login_email, login_pass)
+                    if ok:
+                        st.session_state.is_authenticated = True
+                        st.session_state.current_user = user
+                        st.toast(f"Welcome back, {user['name']}! 🧭")
+                        st.rerun()
+                    else:
+                        st.error(f"❌ {msg}")
+
+            st.markdown("<div style='text-align: center; margin: 1rem 0; color: #94A3B8; font-size: 0.82rem; font-weight: 600;'>— OR TEST INSTANTLY —</div>", unsafe_allow_html=True)
+            if st.button("⚡ 1-Click Demo Student Sign In", use_container_width=True, help="Instantly sign in as pre-seeded Alex Student"):
+                ok, _, user = storage.authenticate_user("student@college.edu", "student123")
+                if ok:
+                    st.session_state.is_authenticated = True
+                    st.session_state.current_user = user
+                    st.toast("Signed in as Demo Student Alex! 🎓")
+                    st.rerun()
+
+        # Tab 2: Create Account
+        with auth_mode[1]:
+            st.markdown("<h3 style='margin-bottom: 0.2rem; font-weight: 700; color: #0F172A;'>Create Student Account</h3><p style='color: #64748B; font-size: 0.88rem; margin-bottom: 1.2rem;'>Join CourseCompass to organize your coursework and notes.</p>", unsafe_allow_html=True)
+            with st.form("signup_form"):
+                new_name = st.text_input("Full Name", placeholder="e.g. Jordan Lee")
+                new_email = st.text_input("Academic / College Email", placeholder="e.g. jordan@university.edu")
+                c_sub1, c_sub2 = st.columns(2)
+                with c_sub1:
+                    new_uni = st.text_input("University / College", placeholder="e.g. Stanford University")
+                with c_sub2:
+                    new_major = st.text_input("Major / Branch", placeholder="e.g. Computer Science")
+                new_pass = st.text_input("Password (min 6 characters)", type="password", placeholder="Create a password")
+                new_pass_confirm = st.text_input("Confirm Password", type="password", placeholder="Re-type your password")
+                reg_submitted = st.form_submit_button("Create Account & Start Learning", type="primary", use_container_width=True)
+                if reg_submitted:
+                    if new_pass != new_pass_confirm:
+                        st.error("❌ Passwords do not match.")
+                    else:
+                        ok, msg, reg_user = storage.register_user(
+                            name=new_name,
+                            email=new_email,
+                            password=new_pass,
+                            university=new_uni,
+                            major=new_major
+                        )
+                        if ok:
+                            st.session_state.is_authenticated = True
+                            st.session_state.current_user = reg_user
+                            st.success(f"🎉 Account created! Welcome, {new_name}.")
+                            st.rerun()
+                        else:
+                            st.error(f"❌ {msg}")
+
+        # Tab 3: Continue with Google
+        with auth_mode[2]:
+            st.markdown("""
+            <h3 style='margin-bottom: 0.2rem; font-weight: 700; color: #0F172A;'>Continue with Google</h3>
+            <p style='color: #64748B; font-size: 0.88rem; margin-bottom: 1.2rem;'>One-click verified single sign-on with your Google Workspace or Gmail account.</p>
+            <div class="google-btn-badge">
+                <svg width="20" height="20" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                </svg>
+                <span>Google Single Sign-On (OAuth 2.0)</span>
+            </div>
+            """, unsafe_allow_html=True)
+            with st.form("google_auth_form"):
+                g_email = st.text_input("Student Google Email", value="student@university.edu", placeholder="your.name@college.edu or gmail.com")
+                g_name = st.text_input("Student Full Name", value="Alex Student", placeholder="Full Name")
+                g_submit = st.form_submit_button("⚡ Continue with Google Account", type="primary", use_container_width=True)
+                if g_submit:
+                    if not g_email.strip() or "@" not in g_email:
+                        st.error("Please enter a valid Google email.")
+                    else:
+                        g_user = storage.google_auth_user(email=g_email, name=g_name)
+                        st.session_state.is_authenticated = True
+                        st.session_state.current_user = g_user
+                        st.toast(f"Successfully authenticated via Google as {g_user['name']}! 🌐")
+                        st.rerun()
+
+
+# Guard: Require Authentication before viewing study resources
+if not st.session_state.is_authenticated:
+    render_auth_view()
+    st.stop()
+
+
 # ---------------- TOP HEADER NAVBAR ----------------
 subjects = storage.get_subjects()
 active_sub = storage.get_subject(st.session_state.selected_subject_id) if st.session_state.selected_subject_id else (subjects[0] if subjects else None)
@@ -353,25 +544,59 @@ engine_badge = "⚡ Groq Llama-3.3 Active" if st.session_state.groq_api_key else
 engine_bg = "#ECFDF5" if st.session_state.groq_api_key else "#F0FDF4"
 engine_color = "#047857" if st.session_state.groq_api_key else "#166534"
 
-st.markdown(f"""
-<div class="saas-navbar">
-    <div class="brand-cluster">
-        <div class="brand-logo-badge">🧭</div>
-        <div>
-            <div class="brand-heading">CourseCompass AI</div>
-            <div class="brand-subtext">College Study Assistant & Grounded RAG Copilot</div>
+curr_user = st.session_state.current_user or {
+    "name": "Alex Student",
+    "email": "student@college.edu",
+    "university": "University Student",
+    "major": "Computer Science"
+}
+user_name = curr_user.get("name", "Student")
+user_inst = curr_user.get("university", "Enrolled")
+
+c_nav_left, c_nav_right = st.columns([3.2, 1.8], gap="small")
+with c_nav_left:
+    st.markdown(f"""
+    <div class="saas-navbar" style="margin-bottom: 0;">
+        <div class="brand-cluster">
+            <div class="brand-logo-badge">🧭</div>
+            <div>
+                <div class="brand-heading">CourseCompass AI</div>
+                <div class="brand-subtext">College Study Assistant & Grounded RAG Copilot</div>
+            </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
+            <div class="nav-status-pill" style="background: {engine_bg}; color: {engine_color};">
+                <span>●</span> {engine_badge}
+            </div>
+            <div style="font-size: 0.8rem; font-weight: 600; color: #1E40AF; background: #EFF6FF; padding: 0.35rem 0.8rem; border-radius: 9999px; border: 1px solid #DBEAFE;">
+                📖 {active_code_name} ({active_chunks_count} chunks)
+            </div>
         </div>
     </div>
-    <div style="display: flex; align-items: center; gap: 0.9rem; flex-wrap: wrap;">
-        <div class="nav-status-pill" style="background: {engine_bg}; color: {engine_color};">
-            <span>●</span> {engine_badge}
+    """, unsafe_allow_html=True)
+
+with c_nav_right:
+    c_user_meta, c_user_logout = st.columns([2.5, 1.5], gap="small")
+    with c_user_meta:
+        st.markdown(f"""
+        <div class="saas-navbar" style="margin-bottom: 0; padding: 0.72rem 1rem;">
+            <div style="display: flex; align-items: center; gap: 0.65rem;">
+                <div style="width: 38px; height: 38px; border-radius: 50%; background: #EFF6FF; border: 1.5px solid #BFDBFE; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; flex-shrink: 0;">
+                    🧑‍🎓
+                </div>
+                <div style="line-height: 1.2; overflow: hidden;">
+                    <div style="font-weight: 700; font-size: 0.88rem; color: #0F172A; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">{user_name}</div>
+                    <div style="font-size: 0.74rem; color: #64748B; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">{user_inst}</div>
+                </div>
+            </div>
         </div>
-        <div style="font-size: 0.82rem; font-weight: 600; color: #1E40AF; background: #EFF6FF; padding: 0.4rem 0.9rem; border-radius: 9999px; border: 1px solid #DBEAFE;">
-            📖 {active_code_name} ({active_chunks_count} chunks)
-        </div>
-    </div>
-</div>
-""", unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
+    with c_user_logout:
+        st.markdown("<div style='height: 4px;'></div>", unsafe_allow_html=True)
+        if st.button("🚪 Sign Out", key="top_sign_out_btn", use_container_width=True):
+            st.session_state.is_authenticated = False
+            st.session_state.current_user = None
+            st.rerun()
 
 
 # ---------------- HORIZONTAL SEGMENTED NAVIGATION ----------------
