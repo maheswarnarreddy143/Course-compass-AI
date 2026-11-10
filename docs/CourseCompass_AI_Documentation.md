@@ -5,7 +5,8 @@
 
 **Project ID:** Prj006  
 **Team ID:** T006  
-**Team GitHub Repository:** [https://github.com/narumaheshkumarreddy1-cmyk/Studdy-Buddy](https://github.com/narumaheshkumarreddy1-cmyk/Studdy-Buddy)
+**Team GitHub Repository:** [https://github.com/narumaheshkumarreddy1-cmyk/Studdy-Buddy](https://github.com/narumaheshkumarreddy1-cmyk/Studdy-Buddy)  
+**Live Deployed Web Application:** [https://studdy-buddy-1st.streamlit.app/](https://studdy-buddy-1st.streamlit.app/)
 
 | Student Name | Registration Number | Individual GitHub Link |
 | :--- | :--- | :--- |

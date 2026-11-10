@@ -92,7 +92,11 @@ def generate_pdf(output_path="CourseCompass_AI_Documentation.pdf"):
     repo_url = "Team GitHub Repository: https://github.com/narumaheshkumarreddy1-cmyk/Studdy-Buddy"
     tw = pymupdf.get_text_length(repo_url, fontname="helv", fontsize=9.2)
     page1.insert_text((margin_x + (content_width - tw)/2, curr_y), repo_url, fontsize=9.2, fontname="helv", color=C_BLUE)
-    curr_y += 35
+    curr_y += 16
+    live_url = "Live Application: https://studdy-buddy-1st.streamlit.app/"
+    tw_l = pymupdf.get_text_length(live_url, fontname="helv", fontsize=9.2)
+    page1.insert_text((margin_x + (content_width - tw_l)/2, curr_y), live_url, fontsize=9.2, fontname="hebo", color=C_GREEN)
+    curr_y += 24
 
     # Team table box
     t_headers = ["Student Name", "Registration Number", "Individual GitHub Link"]

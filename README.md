@@ -1,6 +1,10 @@
 # 🎓 CourseCompass AI — College Study Assistant MVP
 
-CourseCompass AI is an AI-powered study assistant for college students. Students upload course materials (lecture slides, textbook chapters, study notes) and ask questions. The app uses Retrieval-Augmented Generation (RAG) with verifiable page citations, exam-style answer blueprinting (2-mark, 5-mark, 10-mark), and interactive quizzes.
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://studdy-buddy-1st.streamlit.app/)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-blue?logo=github)](https://github.com/narumaheshkumarreddy1-cmyk/Studdy-Buddy)
+
+> 🚀 **Live Deployed Web Application:** [https://studdy-buddy-1st.streamlit.app/](https://studdy-buddy-1st.streamlit.app/)  
+> 📂 **GitHub Repository:** [https://github.com/narumaheshkumarreddy1-cmyk/Studdy-Buddy](https://github.com/narumaheshkumarreddy1-cmyk/Studdy-Buddy)
 
 ---
 
